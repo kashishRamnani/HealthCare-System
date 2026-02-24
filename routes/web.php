@@ -11,8 +11,11 @@ use App\Controllers\Patient\BookAppointmentController;
 // use App\Controllers\Doctor\PatientsController;
 use App\Controllers\Admin\patients;
 use App\Controllers\Admin\Appointments;
+use App\Controllers\Doctor\DoctorDashboard;
+use App\Controllers\Patient\PatientDashboard;
 use App\Constants\Status;
 use App\Controllers\Admin\Doctors;
+use App\Controllers\Admin\AdminDashboard;
 use App\Controllers\Patient\MyAppointment;
 use App\Controllers\NotificationController;
 use App\Controllers\Doctor\DoctorAppointments;
@@ -82,7 +85,10 @@ route('/patient/appointments', 'GET', function() {
     requireRole('patient');
     (new MyAppointment())->index($_SESSION['user']['id']); 
 });
-
+route('/patient/dashboard', 'GET', function() {
+    requireRole('patient');
+    (new PatientDashboard())->index();
+});
 // View single appointment
 if ($method === 'GET' && preg_match('#^/patient/appointments/(\d+)$#', $uri, $matches)) {
     requireRole('patient');
@@ -92,6 +98,10 @@ if ($method === 'GET' && preg_match('#^/patient/appointments/(\d+)$#', $uri, $ma
 route('/doctor/appointments', 'GET', function() {
     requireRole('doctor');
     (new Appointments())->index();
+});
+route('/doctor/dashboard', 'GET', function() {
+    requireRole('doctor');
+    (new DoctorDashboard())->index();
 });
 
 // if ($method === 'GET' && preg_match('#^/admin/appointments/(\d+)$#', $uri, $matches)) {
@@ -111,7 +121,10 @@ route('/doctor/appointments/cancel', 'POST', function() {
 });
 
 
-
+route('/admin/dashboard', 'GET', function() {
+    requireRole('admin'); // ✅ ensures only admin can access
+    (new AdminDashboard())->index();
+});
 route('/admin/appointments', 'GET', function() {
     (new Appointments())->index(); 
 });
